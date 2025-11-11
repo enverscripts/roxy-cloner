@@ -136,7 +136,7 @@ class ServerCloner {
         
         const roles = sourceGuild.roles.cache
             .filter(role => role.name !== '@everyone')
-            .sort((a, b) => a.position - b.position);
+            .sort((b, a) => b.position - a.position);
 
         for (const [, role] of roles) {
             try {
