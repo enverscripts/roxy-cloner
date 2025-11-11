@@ -566,8 +566,8 @@ Kopyalanacak Sunucu: **${sourceGuild.name}**
 Yapıştırılacak Sunucu: **${targetGuild.name}**
 
 Doğru sunucu mu?
-Yanlış = Y 
-Doğru = N (y/n)`).then(sentMsg => {
+Doğru = Y 
+Yanlış = N (y/n)`).then(sentMsg => {
                 botMessageIds.add(sentMsg.id);
             }).catch(() => {});
         } catch (error) {
