@@ -561,11 +561,13 @@ client.on('messageCreate', async (message) => {
                 cloneEmojis: true
             });
             
-            message.channel.send(`📋 **Server Cloning Confirmation**
-Source Server: **${sourceGuild.name}**
-Target Server: **${targetGuild.name}**
+            message.channel.send(`📋 **Sunucu Kopyalaması**
+Kopyalanacak Sunucu: **${sourceGuild.name}**
+Yapıştırılacak Sunucu: **${targetGuild.name}**
 
-Do you want to proceed? (y/n)`).then(sentMsg => {
+Doğru sunucu mu?
+Yanlış = Y 
+Doğru = N (y/n)`).then(sentMsg => {
                 botMessageIds.add(sentMsg.id);
             }).catch(() => {});
         } catch (error) {
