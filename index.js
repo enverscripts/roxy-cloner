@@ -86,16 +86,16 @@ class ServerCloner {
 
             // Show final stats
             this.showStats(progressChannel);
-            this.sendProgress('🎉 Server cloning completed successfully!', progressChannel);
+            this.sendProgress('🎉 Sunucu başarıyla kopyalandı!', progressChannel);
 
         } catch (error) {
-            this.sendProgress(`❌ Cloning failed: ${error.message}`, progressChannel);
+            this.sendProgress(`❌ Kopyalamada hata oluştu: ${error.message}`, progressChannel);
             throw error;
         }
     }
 
     async deleteExistingContent(guild, progressChannel) {
-        this.sendProgress('🗑️  Deleting existing content...', progressChannel);
+        this.sendProgress('🗑️ Mevcut içerik siliniyor...', progressChannel);
         
        
         const channels = guild.channels.cache.filter(ch => ch.deletable);
@@ -132,7 +132,7 @@ class ServerCloner {
     }
 
     async cloneRoles(sourceGuild, targetGuild, progressChannel) {
-        this.sendProgress('👑 Cloning roles...', progressChannel);
+        this.sendProgress('👑 Roller kopyalanıyor...', progressChannel);
         
         const roles = sourceGuild.roles.cache
             .filter(role => role.name !== '@everyone')
@@ -146,7 +146,7 @@ class ServerCloner {
                     permissions: role.permissions,
                     hoist: role.hoist,
                     mentionable: role.mentionable,
-                    reason: 'Server cloning'
+                    reason: 'Sunucu kopyalaması'
                 });
 
                 this.roleMapping.set(role.id, newRole.id);
@@ -162,7 +162,7 @@ class ServerCloner {
 
      
         await this.fixRolePositions(sourceGuild, targetGuild, progressChannel);
-        this.sendProgress('Roles cloning completed.', progressChannel);
+        this.sendProgress('Rol kopyalaması tamamlandı.', progressChannel);
     }
 
     async fixRolePositions(sourceGuild, targetGuild, progressChannel) {
@@ -188,7 +188,7 @@ class ServerCloner {
     }
 
     async cloneCategories(sourceGuild, targetGuild, progressChannel) {
-        this.sendProgress('📁 Cloning categories...', progressChannel);
+        this.sendProgress('📁 Kategoriler kopyalanıyor...', progressChannel);
         
         const categories = sourceGuild.channels.cache
             .filter(ch => ch.type === 'GUILD_CATEGORY')
@@ -215,11 +215,11 @@ class ServerCloner {
             }
         }
 
-        this.sendProgress('Categories cloning completed.', progressChannel);
+        this.sendProgress('Kategoriler başarıyla kopyalandı.', progressChannel);
     }
 
     async cloneChannels(sourceGuild, targetGuild, progressChannel) {
-        this.sendProgress('💬 Cloning channels...', progressChannel);
+        this.sendProgress('💬 Kanallar kopyalanıyor...', progressChannel);
         
         const channels = sourceGuild.channels.cache
             .filter(ch => ch.type === 'GUILD_TEXT' || ch.type === 'GUILD_VOICE')
@@ -237,7 +237,7 @@ class ServerCloner {
                     parent: parent?.id,
                     permissionOverwrites: overwrites || [],
                     position: channel.position,
-                    reason: 'Server cloning'
+                    reason: 'Sunucu kopyalaması'
                 };
 
               
@@ -263,11 +263,11 @@ class ServerCloner {
             }
         }
 
-        this.sendProgress('Channels cloning completed.', progressChannel);
+        this.sendProgress('Kanallar başarıyla kopyalandı.', progressChannel);
     }
 
     async cloneEmojis(sourceGuild, targetGuild, progressChannel) {
-        this.sendProgress('😀 Cloning emojis...', progressChannel);
+        this.sendProgress('😀 Emojiler ve stickerler kopyalanıyor...', progressChannel);
         
         const emojis = sourceGuild.emojis.cache;
         
@@ -277,7 +277,7 @@ class ServerCloner {
                 const imageData = await downloadImage(emojiURL);
 
                 await targetGuild.emojis.create(imageData, emoji.name, {
-                    reason: 'Server cloning'
+                    reason: 'Sunucu kopyalaması'
                 });
 
                 this.sendProgress(`Created emoji: ${emoji.name}`, progressChannel);
@@ -295,7 +295,7 @@ class ServerCloner {
     }
 
     async cloneServerInfo(sourceGuild, targetGuild, progressChannel) {
-        this.sendProgress('🏠 Cloning server info...', progressChannel);
+        this.sendProgress('🏠 Suncuu bilgisi kopyalanıyor...', progressChannel);
         
         try {
             let iconData = null;
@@ -470,13 +470,13 @@ client.on('messageCreate', async (message) => {
         
         if (operation.step === 'confirmProceed') {
             if (messageContent === 'y' || messageContent === 'yes') {
-                message.channel.send('❓ Do you want to clone emojis too? (y/n)').then(sentMsg => {
+                message.channel.send('Emojilerde kopyalansın mı? (y/n)').then(sentMsg => {
                     botMessageIds.add(sentMsg.id);
                 }).catch(() => {});
                 operation.step = 'confirmEmojis';
                 return;
             } else if (messageContent === 'n' || messageContent === 'no') {
-                message.channel.send('❌ Operation cancelled.').then(sentMsg => {
+                message.channel.send('❌ Sunucu kopyalaması iptal edildi..').then(sentMsg => {
                     botMessageIds.add(sentMsg.id);
                 }).catch(() => {});
                 pendingOperations.delete(message.author.id);
@@ -486,7 +486,7 @@ client.on('messageCreate', async (message) => {
             if (messageContent === 'y' || messageContent === 'yes') {
                 operation.cloneEmojis = true;
                 pendingOperations.delete(message.author.id);
-                message.channel.send('🚀 Starting server cloning process...').then(sentMsg => {
+                message.channel.send('🚀 Sunucu kopyalaması başlatılıyor...').then(sentMsg => {
                     botMessageIds.add(sentMsg.id);
                 }).catch(() => {});
                 try {
@@ -501,7 +501,7 @@ client.on('messageCreate', async (message) => {
             } else if (messageContent === 'n' || messageContent === 'no') {
                 operation.cloneEmojis = false;
                 pendingOperations.delete(message.author.id);
-                message.channel.send('🚀 Starting server cloning process (without emojis)...').then(sentMsg => {
+                message.channel.send('🚀 Sunucu kopyalaması başlatıldı!').then(sentMsg => {
                     botMessageIds.add(sentMsg.id);
                 }).catch(() => {});
                 try {
@@ -527,7 +527,7 @@ client.on('messageCreate', async (message) => {
         const targetGuildId = args[1];
         
         if (!sourceGuildId || !targetGuildId) {
-            message.channel.send('❌ Usage: `!clone <source server ID> <target server ID>`').then(sentMsg => {
+            message.channel.send('❌ Hata: `!clone <Kopyalanacak Sunucu ID> <Yapıştırılacak Sunuci ID>`').then(sentMsg => {
                 botMessageIds.add(sentMsg.id);
             }).catch(() => {});
             return;
@@ -539,7 +539,7 @@ client.on('messageCreate', async (message) => {
             const targetGuild = client.guilds.cache.get(targetGuildId);
             
             if (!sourceGuild) {
-                message.channel.send('Source server not found! Make sure you\'re a member.').then(sentMsg => {
+                message.channel.send('Kopyalanacak sunucuda bulunmuyorsunuz!').then(sentMsg => {
                     botMessageIds.add(sentMsg.id);
                 }).catch(() => {});
                 return;
@@ -571,7 +571,7 @@ Yanlış = N (y/n)`).then(sentMsg => {
                 botMessageIds.add(sentMsg.id);
             }).catch(() => {});
         } catch (error) {
-            message.channel.send(`❌ Error: ${error.message}`).then(sentMsg => {
+            message.channel.send(`❌ Hata: ${error.message}`).then(sentMsg => {
                 botMessageIds.add(sentMsg.id);
             }).catch(() => {});
         }
